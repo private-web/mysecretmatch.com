@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>See Who’s Online Now</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #fff;
+}
+
+.container {
+    max-width: 420px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* PROGRESS BAR */
+.progress {
+    width: 100%;
+    height: 6px;
+    background: #1e293b;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+    transition: width 0.5s;
+}
+
+/* CHAT */
+.chat-box {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 10px;
+    height: 420px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    display: flex;
+    align-items: flex-end;
+    margin: 6px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.4s forwards;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 6px;
+}
+
+.bubble {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    max-width: 70%;
+}
+
+.left .bubble {
+    background: #334155;
+}
+
+.right {
+    justify-content: flex-end;
+}
+
+.right .bubble {
+    background: #22c55e;
+}
+
+/* TYPING */
+.typing {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* BUTTON */
+.btn {
+    display: block;
+    text-align: center;
+    background: #22c55e;
+    color: #fff;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* NOTIFICATION */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #22c55e;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    display: none;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="toast" id="toast">Someone joined near you 👀</div>
+
+<div class="container">
+
+    <div class="header">
+        Demo preview • Not a real conversation
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <div class="chat-box" id="chat"></div>
+    <div class="typing" id="typing">Typing...</div>
+
+    <a href="YOUR_CPA_LINK_HERE" class="btn">
+        Continue & Unlock Chat
+    </a>
+
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+const typing = document.getElementById("typing");
+const progress = document.getElementById("progress");
+const toast = document.getElementById("toast");
+
+const messages = [
+    {text: "Hey… are you online?", side: "left"},
+    {text: "Yeah 😅 just got here", side: "right"},
+    {text: "Nice… where are you from?", side: "left"},
+    {text: "Somewhere nearby 😉", side: "right"},
+    {text: "Oh really? 😳", side: "left"},
+    {text: "Yeah… want to chat more?", side: "right"}
+];
+
+let i = 0;
+
+function showMessage() {
+    if (i < messages.length) {
+        typing.style.display = "block";
+
+        setTimeout(() => {
+            typing.style.display = "none";
+
+            const msg = document.createElement("div");
+            msg.className = "message " + messages[i].side;
+
+            const avatar = document.createElement("img");
+            avatar.className = "avatar";
+            avatar.src = messages[i].side === "left"
+                ? "https://i.pravatar.cc/30?img=5"
+                : "https://i.pravatar.cc/30?img=12";
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.innerText = messages[i].text;
+
+            if (messages[i].side === "left") {
+                msg.appendChild(avatar);
+                msg.appendChild(bubble);
+            } else {
+                msg.appendChild(bubble);
+                msg.appendChild(avatar);
+            }
+
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+
+            i++;
+
+            progress.style.width = (i / messages.length * 100) + "%";
+
+            showMessage();
+        }, 1200 + Math.random() * 800);
+    }
+}
+
+/* TOAST NOTIF RANDOM */
+function showToast() {
+    toast.style.display = "block";
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 2000);
+}
+
+setInterval(showToast, 5000);
+
+setTimeout(showMessage, 1000);
+</script>
+
+</body>
+</html>
